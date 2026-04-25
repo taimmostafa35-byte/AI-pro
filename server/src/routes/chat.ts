@@ -1,14 +1,10 @@
 import { Router, Request, Response } from "express";
-import OpenAI from "openai";
+import { GoogleGenerativeAI, Content } from "@google/generative-ai";
 
 const router = Router();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 interface ChatMessage {
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant";
   content: string;
 }
 
@@ -25,35 +21,38 @@ router.post("/", async (req: Request, res: Response) => {
       return;
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       res.status(500).json({
         error:
-          "OpenAI API key not configured. Set OPENAI_API_KEY in your .env file.",
+          "Gemini API key not configured. Set GEMINI_API_KEY in your .env file.",
       });
       return;
     }
 
-    const systemMessage: ChatMessage = {
-      role: "system",
-      content:
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction:
         "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses.",
-    };
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [systemMessage, ...messages],
-      temperature: 0.7,
-      max_tokens: 1000,
     });
 
-    const reply = completion.choices[0]?.message?.content ?? "";
+    const history: Content[] = messages.slice(0, -1).map((msg) => ({
+      role: msg.role === "assistant" ? "model" : "user",
+      parts: [{ text: msg.content }],
+    }));
+
+    const chat = model.startChat({ history });
+
+    const lastMessage = messages[messages.length - 1];
+    const result = await chat.sendMessage(lastMessage.content);
+    const reply = result.response.text();
 
     res.json({ message: reply });
   } catch (error: unknown) {
     console.error("Chat API error:", error);
 
-    if (error instanceof OpenAI.APIError) {
-      res.status(error.status ?? 500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
       return;
     }
 

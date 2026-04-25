@@ -1,12 +1,12 @@
 # AI Chatbot
 
-A modern, real-time AI chatbot powered by OpenAI GPT. Features a sleek dark-themed UI built with React and TypeScript, backed by a Node.js/Express server.
+A modern, real-time AI chatbot powered by Google Gemini. Features a sleek dark-themed UI built with React and TypeScript, backed by a Node.js/Express server.
 
 ![AI Chatbot](https://img.shields.io/badge/AI-Chatbot-6c63ff?style=for-the-badge)
 
 ## Features
 
-- **Real-time AI Conversations** — Chat with GPT-3.5-turbo via OpenAI API
+- **Real-time AI Conversations** — Chat with Gemini 1.5 Flash via Google AI API
 - **Markdown Rendering** — AI responses support rich markdown (code blocks, lists, etc.)
 - **Conversation History** — Full context maintained across messages
 - **Responsive Design** — Works on desktop and mobile
@@ -19,7 +19,7 @@ A modern, real-time AI chatbot powered by OpenAI GPT. Features a sleek dark-them
 | -------- | --------------------------- |
 | Frontend | React 18, TypeScript, Vite  |
 | Backend  | Node.js, Express, TypeScript |
-| AI       | OpenAI GPT-3.5-turbo        |
+| AI       | Google Gemini 1.5 Flash      |
 | Styling  | Custom CSS (dark theme)      |
 
 ## Getting Started
@@ -27,7 +27,7 @@ A modern, real-time AI chatbot powered by OpenAI GPT. Features a sleek dark-them
 ### Prerequisites
 
 - **Node.js** 18+ and npm
-- **OpenAI API Key** — [Get one here](https://platform.openai.com/api-keys)
+- **Google Gemini API Key** (free) — [Get one here](https://aistudio.google.com/app/apikey)
 
 ### Installation
 
@@ -50,10 +50,10 @@ A modern, real-time AI chatbot powered by OpenAI GPT. Features a sleek dark-them
    cp server/.env.example server/.env
    ```
 
-   Edit `server/.env` and add your OpenAI API key:
+   Edit `server/.env` and add your Gemini API key:
 
    ```env
-   OPENAI_API_KEY=sk-your-api-key-here
+   GEMINI_API_KEY=your-gemini-api-key-here
    PORT=3001
    ```
 
@@ -86,7 +86,7 @@ ai-chatbot/
 ├── server/                 # Express backend
 │   ├── src/
 │   │   ├── routes/
-│   │   │   └── chat.ts     # OpenAI chat endpoint
+│   │   │   └── chat.ts     # Gemini chat endpoint
 │   │   └── index.ts        # Server entry point
 │   └── .env.example
 ├── package.json
@@ -97,7 +97,7 @@ ai-chatbot/
 
 | Method | Endpoint       | Description              |
 | ------ | -------------- | ------------------------ |
-| POST   | `/api/chat`    | Send messages to GPT     |
+| POST   | `/api/chat`    | Send messages to Gemini  |
 | GET    | `/api/health`  | Health check             |
 
 ### POST `/api/chat`
